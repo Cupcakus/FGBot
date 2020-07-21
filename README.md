@@ -17,8 +17,8 @@ There are three code-bases for this tool.
 - Make sure mongo is running `sudo service mongodb start`
 - Run the mongo command line `mongo`
 - Create the database `use grognarddb`
-- Create the *users* collection `db.test_account_users.insert({_id:1})
-- Create the *counter* collection `db.test_account_counter.insert({_id:"showID", seqValue:0})
+- Create the *users* collection `db.test_account_users.insert({_id:1})`
+- Create the *counter* collection `db.test_account_counter.insert({_id:"showID", seqValue:0})`
 - Exit the mongo command line `exit`
 
 ## PF2 Discord Bot
