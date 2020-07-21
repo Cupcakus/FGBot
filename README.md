@@ -1,5 +1,5 @@
 # Fantasy Grounds/Discord Bot
-Here is a direct copy of the Pathfinder 2E Discord bot and Fantasy Ground extensions I use to enable stats tracking for my players.  This is a very very hacky solution just meant for my personal use and not yet ready for public use.  However, there has been some interest in someone else taking my code and creating a more universal solution, or a solution that works with D&D 5E.
+Here is a direct copy of the [https://www.fantasygrounds.com/forums/showthread.php?55918](Pathfinder 2E Discord Bot) and Fantasy Ground extensions I use to enable stats tracking for my players.  This is a very very hacky solution just meant for my personal use and not yet ready for public use.  However, there has been some interest in someone else taking my code and creating a more universal solution, or a solution that works with D&D 5E.
 
 This is heavily modified for **my** group.  As we are currently doing the *Extinction Curse* campaign there is a lot of circus code in there you will likely not need.  Feel free to remove it.
 
