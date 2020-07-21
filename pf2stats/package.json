@@ -1,0 +1,25 @@
+{
+  "name": "pf2stats",
+  "version": "1.0.0",
+  "description": "Collect gameplay stats from Fantasy Grounds and send to server",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Cupcakus",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "electron-json-storage": "^4.1.8"
+  },
+  "devDependencies": {
+    "electron": "^8.2.0",
+    "fast-xml-parser": "^3.17.2",
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "jquery": "^3.5.1",
+    "path": "^0.12.7",
+    "xml2js": "^0.4.23",
+    "xml2json": "^0.12.0"
+  }
+}

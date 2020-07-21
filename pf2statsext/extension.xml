@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+"Fantasy Grounds" is a trademark of SmiteWorks USA, LLC.
+Copyright © 2004-2017 SmiteWorks USA, LLC ALL RIGHTS RESERVED.
+
+PFRPG ruleset v3.3.0 for FantasyGrounds
+Copyright © 2015 Smiteworks USA, LLC
+
+3.5E ruleset v3.3.0 for FantasyGrounds
+Copyright © 2015 Smiteworks USA, LLC
+
+CoreRPG ruleset v3.3.0 for FantasyGrounds
+Copyright © 2015 Smiteworks USA, LLC
+
+-->
+
+<root version="3.3.10">
+	<properties>
+		<name>PF2E - Session Stats Recorder</name>
+		<version>0.6.0</version>
+		<author>Cucpcakus</author>
+		<description>Records vital statistics for Party and GM.  Requires Companion App</description>
+		<loadorder>200</loadorder>
+
+		<ruleset>
+			<name>PFRPG2</name>
+			<minrelease>12</minrelease>
+		</ruleset>
+	</properties>
+	<announcement text="--Session Stats Recorder v0.6.0 Beta\nFor Fantasy Grounds Unity\nPFRPG2 Release 12+\nRequires Companion App\n--By Cupcakus" font="emotefont"/>
+	<base>
+	<script name="EasyCT" file="scripts/easy_ct.lua" />
+	<windowclass name="chat" merge="join">
+		<sheetdata>
+			<!--We connect to the chat window to monitor most events-->
+			<basicchatwindow name="chat">
+				<script name="StatsTracker" file="scripts/stats_tracker.lua" />
+			</basicchatwindow>
+		</sheetdata>
+	</windowclass>
+	</base>
+</root>

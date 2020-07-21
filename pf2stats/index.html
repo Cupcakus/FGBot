@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Grognard: PF2E Stats & Circus Tracker</title>
+
+  <link rel="stylesheet" href="./contents/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="./contents/jquery/jquery.js" onload="window.$ = window.jQuery = module.exports"></script>
+  <script src="./contents/bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    const storage = require('electron-json-storage');
+    var gSettings;
+    storage.get('settings', function (error, data) {
+      if (error) throw error;
+
+      gSettings = data;
+      if (gSettings.sessionDate == undefined) {
+        gSettings.server = "http://localhost:3000";
+        gSettings.DB = "C:\\Users\\Chris\\AppData\\Roaming\\Fantasy Grounds\\campaigns\\Age of Ashes\\db.xml";
+        gSettings.Log = "C:\\projects\\logs"
+        gSettings.session = 0;
+        gSettings.sessionDate = new Date();
+      }
+
+      $("#inputServer").attr("value", gSettings.server);
+      $("#inputDB").attr("value", gSettings.DB);
+      $("#inputLog").attr("value", gSettings.Log);
+      $("#curSession").html("Current Session: " + gSettings.session);
+      $("#curSessionDate").html("Current Session: " + gSettings.sessionDate);
+    });
+
+    var saveSettings = function () {
+      gSettings.server = $("#inputServer").val();
+      gSettings.DB = $("#inputDB").val();
+      gSettings.Log = $("#inputLog").val();
+
+      storage.set('settings', gSettings, function (error) {
+        if (error) throw error;
+      });
+    }
+
+    require('electron').ipcRenderer.on('NewSession', function (event, message) {
+      gSettings.session = message;
+      gSettings.sessionDate = new Date();
+      saveSettings();
+      $("#curSession").html("Current Session: " + gSettings.session);
+      $("#curSessionDate").html("Current Session: " + gSettings.sessionDate);
+    });
+
+    require('electron').ipcRenderer.on('UpdateShow', function (event, m) {
+        $("#inputCircusName").val(m.circusname);
+        $("#inputCircusTown").val(m.circustown);
+        $("#inputCircusAdTier").val(m.adtier);
+        $("#inputCircusAdcost").val(m.adcost);
+        $("#inputCircusAdAnt").val(m.adant);
+        $("#inputCircusStartPrestige").val(m.startprestige);
+        $("#inputCircusStartEx").val(m.startexcitement);
+        $("#inputCircusStartAnt").val(m.startanticipation);
+        $("#inputCircusMaxAnt").val(m.maxanticipation);
+        $("#inputCircusDay1Action").val(m.downtime[0].activity);
+        $("#inputCircusDay1Ant").val(m.downtime[0].anticipation);
+        $("#inputCircusDay2Action").val(m.downtime[1].activity);
+        $("#inputCircusDay2Ant").val(m.downtime[1].anticipation);
+        $("#inputCircusDay3Action").val(m.downtime[2].activity);
+        $("#inputCircusDay3Ant").val(m.downtime[2].anticipation);
+        $("#inputCircusDay4Action").val(m.downtime[3].activity);
+        $("#inputCircusDay4Ant").val(m.downtime[3].anticipation);
+        $("#inputCircusDay5Action").val(m.downtime[4].activity);
+        $("#inputCircusDay5Ant").val(m.downtime[4].anticipation);
+        $("#inputCircusDay6Action").val(m.downtime[5].activity);
+        $("#inputCircusDay6Ant").val(m.downtime[5].anticipation);
+        $("#inputCircusDay7Action").val(m.downtime[6].activity);
+        $("#inputCircusDay7Ant").val(m.downtime[6].anticipation);
+        $("#inputCircusBeer").prop("checked", m.upgrades.beer);
+        $("#inputCircusConfections").prop("checked",m.upgrades.confections);
+        $("#inputCircusBinoculars").prop("checked", m.upgrades.binoculars);
+        $("#inputCircusMerchBasic").prop("checked",m.upgrades.merchbasic);
+        $("#inputCircusMerchQuality").prop("checked", m.upgrades.merchquality);
+        $("#inputCircusMerchExtra").prop("checked", m.upgrades.merchextra);
+        $("#inputCircusNonPerf1Name").val(m.nonperformers[0].name);
+        $("#inputCircusNonPerf1Role").val(m.nonperformers[0].role);
+        $("#inputCircusNonPerf2Name").val(m.nonperformers[1].name);
+        $("#inputCircusNonPerf2Role").val(m.nonperformers[1].role);
+        $("#inputCircusNonPerf3Name").val(m.nonperformers[2].name);
+        $("#inputCircusNonPerf3Role").val(m.nonperformers[2].role);
+        $("#inputCircusNonPerf4Name").val(m.nonperformers[3].name);
+        $("#inputCircusNonPerf4Role").val(m.nonperformers[3].role);
+        $("#inputCircusRandomEvent").val(m.randomevent);
+        $("#inputCircusTrick1Perf").val(m.tricks[0].performer);
+        $("#inputCircusTrick1Level").val(m.tricks[0].level);
+        $("#inputCircusTrick1DC").val(m.tricks[0].dc);
+        $("#inputCircusTrick1Action1").val(m.tricks[0].actions[0].action);
+        $("#inputCircusTrick1Result1").val(m.tricks[0].actions[0].result);
+        $("#inputCircusTrick1EXC1").val(m.tricks[0].actions[0].excitement);
+        $("#inputCircusTrick1ANT1").val(m.tricks[0].actions[0].anticipation);
+        $("#inputCircusTrick1Action2").val(m.tricks[0].actions[1].action);
+        $("#inputCircusTrick1Result2").val(m.tricks[0].actions[1].result);
+        $("#inputCircusTrick1EXC2").val(m.tricks[0].actions[1].excitement);
+        $("#inputCircusTrick1ANT2").val(m.tricks[0].actions[1].anticipation);
+        $("#inputCircusTrick1Action3").val(m.tricks[0].actions[2].action);
+        $("#inputCircusTrick1Result3").val(m.tricks[0].actions[2].result);
+        $("#inputCircusTrick1EXC3").val(m.tricks[0].actions[2].excitement);
+        $("#inputCircusTrick1ANT3").val(m.tricks[0].actions[2].anticipation);
+        $("#inputCircusTrick2Perf").val(m.tricks[1].performer);
+        $("#inputCircusTrick2Level").val(m.tricks[1].level);
+        $("#inputCircusTrick2DC").val(m.tricks[1].dc);
+        $("#inputCircusTrick2Action1").val(m.tricks[1].actions[0].action);
+        $("#inputCircusTrick2Result1").val(m.tricks[1].actions[0].result);
+        $("#inputCircusTrick2EXC1").val(m.tricks[1].actions[0].excitement);
+        $("#inputCircusTrick2ANT1").val(m.tricks[1].actions[0].anticipation);
+        $("#inputCircusTrick2Action2").val(m.tricks[1].actions[1].action);
+        $("#inputCircusTrick2Result2").val(m.tricks[1].actions[1].result);
+        $("#inputCircusTrick2EXC2").val(m.tricks[1].actions[1].excitement);
+        $("#inputCircusTrick2ANT2").val(m.tricks[1].actions[1].anticipation);
+        $("#inputCircusTrick2Action3").val(m.tricks[1].actions[2].action);
+        $("#inputCircusTrick2Result3").val(m.tricks[1].actions[2].result);
+        $("#inputCircusTrick2EXC3").val(m.tricks[1].actions[2].excitement);
+        $("#inputCircusTrick2ANT3").val(m.tricks[1].actions[2].anticipation);
+        $("#inputCircusTrick3Perf").val(m.tricks[2].performer);
+        $("#inputCircusTrick3Level").val(m.tricks[2].level);
+        $("#inputCircusTrick3DC").val(m.tricks[2].dc);
+        $("#inputCircusTrick3Action1").val(m.tricks[2].actions[0].action);
+        $("#inputCircusTrick3Result1").val(m.tricks[2].actions[0].result);
+        $("#inputCircusTrick3EXC1").val(m.tricks[2].actions[0].excitement);
+        $("#inputCircusTrick3ANT1").val(m.tricks[2].actions[0].anticipation);
+        $("#inputCircusTrick3Action2").val(m.tricks[2].actions[1].action);
+        $("#inputCircusTrick3Result2").val(m.tricks[2].actions[1].result);
+        $("#inputCircusTrick3EXC2").val(m.tricks[2].actions[1].excitement);
+        $("#inputCircusTrick3ANT2").val(m.tricks[2].actions[1].anticipation);
+        $("#inputCircusTrick3Action3").val(m.tricks[2].actions[2].action);
+        $("#inputCircusTrick3Result3").val(m.tricks[2].actions[2].result);
+        $("#inputCircusTrick3EXC3").val(m.tricks[2].actions[2].excitement);
+        $("#inputCircusTrick3ANT3").val(m.tricks[2].actions[2].anticipation);
+        $("#inputCircusTrick4Perf").val(m.tricks[3].performer);
+        $("#inputCircusTrick4Level").val(m.tricks[3].level);
+        $("#inputCircusTrick4DC").val(m.tricks[3].dc);
+        $("#inputCircusTrick4Action1").val(m.tricks[3].actions[0].action);
+        $("#inputCircusTrick4Result1").val(m.tricks[3].actions[0].result);
+        $("#inputCircusTrick4EXC1").val(m.tricks[3].actions[0].excitement);
+        $("#inputCircusTrick4ANT1").val(m.tricks[3].actions[0].anticipation);
+        $("#inputCircusTrick4Action2").val(m.tricks[3].actions[1].action);
+        $("#inputCircusTrick4Result2").val(m.tricks[3].actions[1].result);
+        $("#inputCircusTrick4EXC2").val(m.tricks[3].actions[1].excitement);
+        $("#inputCircusTrick4ANT2").val(m.tricks[3].actions[1].anticipation);
+        $("#inputCircusTrick4Action3").val(m.tricks[3].actions[2].action);
+        $("#inputCircusTrick4Result3").val(m.tricks[3].actions[2].result);
+        $("#inputCircusTrick4EXC3").val(m.tricks[3].actions[2].excitement);
+        $("#inputCircusTrick4ANT3").val(m.tricks[3].actions[2].anticipation);
+        $("#inputCircusTrick5Perf").val(m.tricks[4].performer);
+        $("#inputCircusTrick5Level").val(m.tricks[4].level);
+        $("#inputCircusTrick5DC").val(m.tricks[4].dc);
+        $("#inputCircusTrick5Action1").val(m.tricks[4].actions[0].action);
+        $("#inputCircusTrick5Result1").val(m.tricks[4].actions[0].result);
+        $("#inputCircusTrick5EXC1").val(m.tricks[4].actions[0].excitement);
+        $("#inputCircusTrick5ANT1").val(m.tricks[4].actions[0].anticipation);
+        $("#inputCircusTrick5Action2").val(m.tricks[4].actions[1].action);
+        $("#inputCircusTrick5Result2").val(m.tricks[4].actions[1].result);
+        $("#inputCircusTrick5EXC2").val(m.tricks[4].actions[1].excitement);
+        $("#inputCircusTrick5ANT2").val(m.tricks[4].actions[1].anticipation);
+        $("#inputCircusTrick5Action3").val(m.tricks[4].actions[2].action);
+        $("#inputCircusTrick5Result3").val(m.tricks[4].actions[2].result);
+        $("#inputCircusTrick5EXC3").val(m.tricks[4].actions[2].excitement);
+        $("#inputCircusTrick5ANT3").val(m.tricks[4].actions[2].anticipation);
+        $("#inputCircusTrick6Perf").val(m.tricks[5].performer);
+        $("#inputCircusTrick6Level").val(m.tricks[5].level);
+        $("#inputCircusTrick6DC").val(m.tricks[5].dc);
+        $("#inputCircusTrick6Action1").val(m.tricks[5].actions[0].action);
+        $("#inputCircusTrick6Result1").val(m.tricks[5].actions[0].result);
+        $("#inputCircusTrick6EXC1").val(m.tricks[5].actions[0].excitement);
+        $("#inputCircusTrick6ANT1").val(m.tricks[5].actions[0].anticipation);
+        $("#inputCircusTrick6Action2").val(m.tricks[5].actions[1].action);
+        $("#inputCircusTrick6Result2").val(m.tricks[5].actions[1].result);
+        $("#inputCircusTrick6EXC2").val(m.tricks[5].actions[1].excitement);
+        $("#inputCircusTrick6ANT2").val(m.tricks[5].actions[1].anticipation);
+        $("#inputCircusTrick6Action3").val(m.tricks[5].actions[2].action);
+        $("#inputCircusTrick6Result3").val(m.tricks[5].actions[2].result);
+        $("#inputCircusTrick6EXC3").val(m.tricks[5].actions[2].excitement);
+        $("#inputCircusTrick6ANT3").val(m.tricks[5].actions[2].anticipation);
+        $("#inputCircusTrick7Perf").val(m.tricks[6].performer);
+        $("#inputCircusTrick7Level").val(m.tricks[6].level);
+        $("#inputCircusTrick7DC").val(m.tricks[6].dc);
+        $("#inputCircusTrick7Action1").val(m.tricks[6].actions[0].action);
+        $("#inputCircusTrick7Result1").val(m.tricks[6].actions[0].result);
+        $("#inputCircusTrick7EXC1").val(m.tricks[6].actions[0].excitement);
+        $("#inputCircusTrick7ANT1").val(m.tricks[6].actions[0].anticipation);
+        $("#inputCircusTrick7Action2").val(m.tricks[6].actions[1].action);
+        $("#inputCircusTrick7Result2").val(m.tricks[6].actions[1].result);
+        $("#inputCircusTrick7EXC2").val(m.tricks[6].actions[1].excitement);
+        $("#inputCircusTrick7ANT2").val(m.tricks[6].actions[1].anticipation);
+        $("#inputCircusTrick7Action3").val(m.tricks[6].actions[2].action);
+        $("#inputCircusTrick7Result3").val(m.tricks[6].actions[2].result);
+        $("#inputCircusTrick7EXC3").val(m.tricks[6].actions[2].excitement);
+        $("#inputCircusTrick7ANT3").val(m.tricks[6].actions[2].anticipation);
+        $("#inputCircusFinalEXC").val(m.finalexcitement);
+        $("#inputCircusFinalAnt").val(m.finalanticipation);
+        $("#inputCircusFinalPrestige").val(m.finalprestige);
+        $("#inputCircusPayout").val(m.payout);
+    });
+
+    require('electron').ipcRenderer.on('UpdateCircus', function (event, message) {
+      $("#inputCircusName").val(message.name);
+      $("#inputCircusTown").val(message.town);
+      $("#inputCircusPrestige").val(message.prestige);
+      $("#inputCircusCoffers").val(message.coffers);
+      $("#inputCircusAcoustics").prop("checked", message.upgrades.acoustics);
+      $("#inputCircusSafetynet").prop("checked", message.upgrades.safetynet);
+      $("#inputCircusPaddedfloors").prop("checked", message.upgrades.paddedfloors);
+      $("#inputCircusBleachers").prop("checked", message.upgrades.bleachers);
+      $("#inputCircusAssigned").prop("checked", message.upgrades.assignedseats);
+      $("#inputCircusUpholstered").prop("checked", message.upgrades.upholsteredseats);
+      $("#inputCircusSpotlights").prop("checked", message.upgrades.spotlights);
+      $("#inputCircusBigtent").prop("checked", message.upgrades.bigtent);
+      $("#inputCircusHugetent").prop("checked", message.upgrades.hugetent);
+      $("#inputCircusMassivetent").prop("checked", message.upgrades.massivetent);
+      $("#inputCircusWatermark").prop("checked", message.upgrades.watermark);
+      var strNPCs = "";
+      for (var i = 0; i < message.npcs.length; i++) {
+        strNPCs += "<div class='row'>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ i + "Name' value='" + message.npcs[i].name + "'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ i + "Img' value='" + message.npcs[i].img + "'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ i + "Traits' value='" + message.npcs[i].traits + "'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ i + "Checks' value='" + message.npcs[i].checks + "'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ i + "DC' value='" + message.npcs[i].dc + "'>\
+          </div>\
+        </div>\
+        <p></p>"
+      }
+      $("#npcs").html(strNPCs);
+    });
+
+    require('electron').ipcRenderer.on('UpdateUsers', function (event, message) {
+      if (message.name) $("#InputCampaignName").val(message.name);
+      if (message.start) $("#InputCampaignStart").val(message.start);
+      if (message.gm) $("#InputCampaignGM").val(message.gm);
+      if (message.players[0]) $("#InputCampaignPlayer0Character").val(message.players[0].character);
+      if (message.players[0]) $("#InputCampaignPlayer0Owner").val(message.players[0].owner);
+      if (message.players[0]) $("#InputCampaignPlayer0Discord").val(message.players[0].discord);
+      if (message.players[1]) $("#InputCampaignPlayer1Character").val(message.players[1].character);
+      if (message.players[1]) $("#InputCampaignPlayer1Owner").val(message.players[1].owner);
+      if (message.players[1]) $("#InputCampaignPlayer1Discord").val(message.players[1].discord);
+      if (message.players[2]) $("#InputCampaignPlayer2Character").val(message.players[2].character);
+      if (message.players[2]) $("#InputCampaignPlayer2Owner").val(message.players[2].owner);
+      if (message.players[2]) $("#InputCampaignPlayer2Discord").val(message.players[2].discord);
+      if (message.players[3]) $("#InputCampaignPlayer3Character").val(message.players[3].character);
+      if (message.players[3]) $("#InputCampaignPlayer3Owner").val(message.players[3].owner);
+      if (message.players[3]) $("#InputCampaignPlayer3Discord").val(message.players[3].discord);
+    });
+
+    function addNPC() {
+      var strNPC = $("#inputCircusNPC0Name");
+      var iNPC = 0;
+      while (strNPC.length != 0) {
+        iNPC++;
+        strNPC = $("#inputCircusNPC" + iNPC + "Name");
+      }
+      var strNPCs = $("#npcs").html();
+      strNPCs += "<div class='row'>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ iNPC + "Name'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ iNPC + "Img'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ iNPC + "Traits'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ iNPC + "Checks'>\
+          </div>\
+          <div class='col-sm'>\
+            <input type='text' class='form-control' id='inputCircusNPC"+ iNPC + "DC'>\
+          </div>\
+        </div>\
+        <p></p>"
+      $("#npcs").html(strNPCs);
+    }
+
+    function getShow()
+    {
+      require('electron').ipcRenderer.send('getShow', $("#inputCircusGetShow").val());
+    }
+
+    function saveCircus() {
+      var circus = {
+        name: $("#inputCircusName").val(),
+        town: $("#inputCircusTown").val(),
+        prestige: Number($("#inputCircusPrestige").val()),
+        coffers: Number($("#inputCircusCoffers").val()),
+        upgrades: {
+          acoustics: $("#inputCircusAcoustics").prop("checked"),
+          safetynet: $("#inputCircusSafetynet").prop("checked"),
+          paddedfloors: $("#inputCircusPaddedfloors").prop("checked"),
+          bleachers: $("#inputCircusBleachers").prop("checked"),
+          assignedseats: $("#inputCircusAssigned").prop("checked"),
+          upholsteredseats: $("#inputCircusUpholstered").prop("checked"),
+          spotlights: $("#inputCircusSpotlights").prop("checked"),
+          bigtent: $("#inputCircusBigtent").prop("checked"),
+          hugetent: $("#inputCircusHugetent").prop("checked"),
+          massivetent: $("#inputCircusMassivetent").prop("checked"),
+          watermark: $("#inputCircusWatermark").prop("checked")
+        },
+        npcs: []
+      }
+      var strNPC = $("#inputCircusNPC0Name");
+      var iNPC = 0;
+      while (strNPC.length != 0) {
+        var npc = {
+          name: $("#inputCircusNPC" + iNPC + "Name").val(),
+          img: $("#inputCircusNPC" + iNPC + "Img").val(),
+          traits: $("#inputCircusNPC" + iNPC + "Traits").val(),
+          checks: $("#inputCircusNPC" + iNPC + "Checks").val(),
+          dc: $("#inputCircusNPC" + iNPC + "DC").val()
+        }
+        circus.npcs.push(npc);
+        iNPC++;
+        strNPC = $("#inputCircusNPC" + iNPC + "Name");
+      }
+      require('electron').ipcRenderer.send('sendCircus', circus);
+    }
+
+    function saveUsers() {
+      var users = {
+        name: $("#InputCampaignName").val(),
+        gm: $("#InputCampaignGM").val(),
+        start: $("#InputCampaignStart").val(),
+        players: [
+          {
+            character: $("#InputCampaignPlayer0Character").val(),
+            owner: $("#InputCampaignPlayer0Owner").val(),
+            discord: $("#InputCampaignPlayer0Discord").val()
+          },
+          {
+            character: $("#InputCampaignPlayer1Character").val(),
+            owner: $("#InputCampaignPlayer1Owner").val(),
+            discord: $("#InputCampaignPlayer1Discord").val()
+          },
+          {
+            character: $("#InputCampaignPlayer2Character").val(),
+            owner: $("#InputCampaignPlayer2Owner").val(),
+            discord: $("#InputCampaignPlayer2Discord").val()
+          },
+          {
+            character: $("#InputCampaignPlayer3Character").val(),
+            owner: $("#InputCampaignPlayer3Owner").val(),
+            discord: $("#InputCampaignPlayer3Discord").val()
+          },
+        ]
+      }
+      require('electron').ipcRenderer.send('sendUsers', users);
+    }
+
+    function collectShow()
+    {
+      var show = {
+        circusname: $("#inputCircusName").val(),
+        circustown: $("#inputCircusTown").val(),
+        date: new Date(),
+        adtier: Number($("#inputCircusAdTier").val()),
+        adcost: Number($("#inputCircusAdcost").val()),
+        adant: Number($("#inputCircusAdAnt").val()),
+        startprestige: Number($("#inputCircusStartPrestige").val()),
+        startexcitement: Number($("#inputCircusStartEx").val()),
+        startanticipation: Number($("#inputCircusStartAnt").val()),
+        maxanticipation: Number($("#inputCircusMaxAnt").val()),
+        downtime: [
+          {
+            activity: $("#inputCircusDay1Action").val(),
+            anticipation: Number($("#inputCircusDay1Ant").val())
+          },
+          {
+            activity: $("#inputCircusDay2Action").val(),
+            anticipation: Number($("#inputCircusDay2Ant").val())
+          },
+          {
+            activity: $("#inputCircusDay3Action").val(),
+            anticipation: Number($("#inputCircusDay3Ant").val())
+          },
+          {
+            activity: $("#inputCircusDay4Action").val(),
+            anticipation: Number($("#inputCircusDay4Ant").val())
+          },
+          {
+            activity: $("#inputCircusDay5Action").val(),
+            anticipation: Number($("#inputCircusDay5Ant").val())
+          },
+          {
+            activity: $("#inputCircusDay6Action").val(),
+            anticipation: Number($("#inputCircusDay6Ant").val())
+          },
+          {
+            activity: $("#inputCircusDay7Action").val(),
+            anticipation: Number($("#inputCircusDay7Ant").val())
+          }
+        ],
+        upgrades: {
+          beer: $("#inputCircusBeer").prop("checked"),
+          confections: $("#inputCircusConfections").prop("checked"),
+          binoculars: $("#inputCircusBinoculars").prop("checked"),
+          merchbasic: $("#inputCircusMerchBasic").prop("checked"),
+          merchquality: $("#inputCircusMerchQuality").prop("checked"),
+          merchextra: $("#inputCircusMerchExtra").prop("checked")
+        },
+        nonperformers: [
+          {
+            name: $("#inputCircusNonPerf1Name").val(),
+            role: $("#inputCircusNonPerf1Role").val()
+          },
+          {
+            name: $("#inputCircusNonPerf2Name").val(),
+            role: $("#inputCircusNonPerf2Role").val()
+          },
+          {
+            name: $("#inputCircusNonPerf3Name").val(),
+            role: $("#inputCircusNonPerf3Role").val()
+          },
+          {
+            name: $("#inputCircusNonPerf4Name").val(),
+            role: $("#inputCircusNonPerf4Role").val()
+          }
+        ],
+        randomevent: $("#inputCircusRandomEvent").val(),
+        tricks: [
+          {
+            performer: $("#inputCircusTrick1Perf").val(),
+            level: $("#inputCircusTrick1Level").val(),
+            dc: $("#inputCircusTrick1DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick1Action1").val(),
+                result: Number($("#inputCircusTrick1Result1").val()),
+                excitement: Number($("#inputCircusTrick1EXC1").val()),
+                anticipation: Number($("#inputCircusTrick1ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick1Action2").val(),
+                result: Number($("#inputCircusTrick1Result2").val()),
+                excitement: Number($("#inputCircusTrick1EXC2").val()),
+                anticipation: Number($("#inputCircusTrick1ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick1Action3").val(),
+                result: Number($("#inputCircusTrick1Result3").val()),
+                excitement: Number($("#inputCircusTrick1EXC3").val()),
+                anticipation: Number($("#inputCircusTrick1ANT3").val())
+              }
+            ]
+          },
+          {
+            performer: $("#inputCircusTrick2Perf").val(),
+            level: $("#inputCircusTrick2Level").val(),
+            dc: $("#inputCircusTrick2DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick2Action1").val(),
+                result: Number($("#inputCircusTrick2Result1").val()),
+                excitement: Number($("#inputCircusTrick2EXC1").val()),
+                anticipation: Number($("#inputCircusTrick2ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick2Action2").val(),
+                result: Number($("#inputCircusTrick2Result2").val()),
+                excitement: Number($("#inputCircusTrick2EXC2").val()),
+                anticipation: Number($("#inputCircusTrick2ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick2Action3").val(),
+                result: Number($("#inputCircusTrick2Result3").val()),
+                excitement: Number($("#inputCircusTrick2EXC3").val()),
+                anticipation: Number($("#inputCircusTrick2ANT3").val())
+              }
+            ]
+          },
+          {
+            performer: $("#inputCircusTrick3Perf").val(),
+            level: $("#inputCircusTrick3Level").val(),
+            dc: $("#inputCircusTrick3DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick3Action1").val(),
+                result: Number($("#inputCircusTrick3Result1").val()),
+                excitement: Number($("#inputCircusTrick3EXC1").val()),
+                anticipation: Number($("#inputCircusTrick3ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick3Action2").val(),
+                result: Number($("#inputCircusTrick3Result2").val()),
+                excitement: Number($("#inputCircusTrick3EXC2").val()),
+                anticipation: Number($("#inputCircusTrick3ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick3Action3").val(),
+                result: Number($("#inputCircusTrick3Result3").val()),
+                excitement: Number($("#inputCircusTrick3EXC3").val()),
+                anticipation: Number($("#inputCircusTrick3ANT3").val())
+              }
+            ]
+          },
+          {
+            performer: $("#inputCircusTrick4Perf").val(),
+            level: $("#inputCircusTrick4Level").val(),
+            dc: $("#inputCircusTrick4DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick4Action1").val(),
+                result: Number($("#inputCircusTrick4Result1").val()),
+                excitement: Number($("#inputCircusTrick4EXC1").val()),
+                anticipation: Number($("#inputCircusTrick4ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick4Action2").val(),
+                result: Number($("#inputCircusTrick4Result2").val()),
+                excitement: Number($("#inputCircusTrick4EXC2").val()),
+                anticipation: Number($("#inputCircusTrick4ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick4Action3").val(),
+                result: Number($("#inputCircusTrick4Result3").val()),
+                excitement: Number($("#inputCircusTrick4EXC3").val()),
+                anticipation: Number($("#inputCircusTrick4ANT3").val())
+              }
+            ]
+          },
+          {
+            performer: $("#inputCircusTrick5Perf").val(),
+            level: $("#inputCircusTrick5Level").val(),
+            dc: $("#inputCircusTrick5DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick5Action1").val(),
+                result: Number($("#inputCircusTrick5Result1").val()),
+                excitement: Number($("#inputCircusTrick5EXC1").val()),
+                anticipation: Number($("#inputCircusTrick5ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick5Action2").val(),
+                result: Number($("#inputCircusTrick5Result2").val()),
+                excitement: Number($("#inputCircusTrick5EXC2").val()),
+                anticipation: Number($("#inputCircusTrick5ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick5Action3").val(),
+                result: Number($("#inputCircusTrick5Result3").val()),
+                excitement: Number($("#inputCircusTrick5EXC3").val()),
+                anticipation: Number($("#inputCircusTrick5ANT3").val())
+              }
+            ]
+          },
+          {
+            performer: $("#inputCircusTrick6Perf").val(),
+            level: $("#inputCircusTrick6Level").val(),
+            dc: $("#inputCircusTrick6DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick6Action1").val(),
+                result: Number($("#inputCircusTrick6Result1").val()),
+                excitement: Number($("#inputCircusTrick6EXC1").val()),
+                anticipation: Number($("#inputCircusTrick6ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick6Action2").val(),
+                result: Number($("#inputCircusTrick6Result2").val()),
+                excitement: Number($("#inputCircusTrick6EXC2").val()),
+                anticipation: Number($("#inputCircusTrick6ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick6Action3").val(),
+                result: Number($("#inputCircusTrick6Result3").val()),
+                excitement: Number($("#inputCircusTrick6EXC3").val()),
+                anticipation: Number($("#inputCircusTrick6ANT3").val())
+              }
+            ]
+          },
+          {
+            performer: $("#inputCircusTrick7Perf").val(),
+            level: $("#inputCircusTrick7Level").val(),
+            dc: $("#inputCircusTrick7DC").val(),
+            actions: [
+              {
+                action: $("#inputCircusTrick7Action1").val(),
+                result: Number($("#inputCircusTrick7Result1").val()),
+                excitement: Number($("#inputCircusTrick7EXC1").val()),
+                anticipation: Number($("#inputCircusTrick7ANT1").val())
+              },
+              {
+                action: $("#inputCircusTrick7Action2").val(),
+                result: Number($("#inputCircusTrick7Result2").val()),
+                excitement: Number($("#inputCircusTrick7EXC2").val()),
+                anticipation: Number($("#inputCircusTrick7ANT2").val())
+              },
+              {
+                action: $("#inputCircusTrick7Action3").val(),
+                result: Number($("#inputCircusTrick7Result3").val()),
+                excitement: Number($("#inputCircusTrick7EXC3").val()),
+                anticipation: Number($("#inputCircusTrick7ANT3").val())
+              }
+            ]
+          },
+        ],
+        finalexcitement: Number($("#inputCircusFinalEXC").val()),
+        finalanticipation: Number($("#inputCircusFinalAnt").val()),
+        finalprestige: Number($("#inputCircusFinalPrestige").val()),
+        payout: Number($("#inputCircusPayout").val()),
+      }
+      return show;
+    }
+
+    function saveShow() {
+      var show = collectShow();
+      require('electron').ipcRenderer.send('sendShow', show);
+
+      $("#contact [id^='inputCircus']").val("");
+      $("#contact [id^='inputCircus']").prop("checked", false);
+    }
+
+    function updateShow() {
+      var arg = {
+        show: collectShow(),
+        id: $("#inputCircusGetShow").val()
+      }
+      require('electron').ipcRenderer.send('updateShow', arg);
+
+      $("#contact [id^='inputCircus']").val("");
+      $("#contact [id^='inputCircus']").prop("checked", false);
+    }
+  </script>
+</head>
+
+<body>
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+        aria-selected="true">Campaign</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+        aria-selected="false">Circus</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
+        aria-selected="false">Show</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings"
+        aria-selected="false">Settings</a>
+    </li>
+  </ul>
+  <p class="text-white" id="curSession">Current Session: 100</p>
+  <p class="text-white" id="curSessionDate">Session Last Changed:</p>
+  <hr class="dropdown-divider" />
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class="form-group">
+        <label for="InputCampaignName">Campaign Name</label>
+        <input type="text" class="form-control" id="InputCampaignName">
+      </div>
+      <div class="form-group">
+        <label for="InputCampaignStart">Start Date</label>
+        <input type="text" class="form-control" id="InputCampaignStart">
+      </div>
+      <div class="form-group">
+        <label for="InputCampaignGM">Gamemaster</label>
+        <input type="text" class="form-control" id="InputCampaignGM">
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="InputCampaignPlayer0Character">Player #1 Character</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer0Character">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer0Owner">Player #1 Owner</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer0Owner">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer0Discord">Player #1 Discord</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer0Discord">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="InputCampaignPlayer1Character">Player #2 Character</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer1Character">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer1Owner">Player #2 Owner</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer1Owner">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer1Discord">Player #2 Discord</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer1Discord">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="InputCampaignPlayer2Character">Player #3 Character</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer2Character">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer2Owner">Player #3 Owner</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer2Owner">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer2Discord">Player #3 Discord</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer2Discord">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="InputCampaignPlayer3Character">Player #4 Character</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer3Character">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer3Owner">Player #4 Owner</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer3Owner">
+          </div>
+          <div class="col-sm">
+            <label for="InputCampaignPlayer3Discord">Player #4 Discord</label>
+            <input type="text" class="form-control" id="InputCampaignPlayer3Discord">
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" onclick="saveUsers()">Save</button>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <p></p>
+      <div class="form-group">
+        <label for="inputCircusName">Name</label>
+        <input type="text" class="form-control" id="inputCircusName">
+      </div>
+      <div class="form-group">
+        <label for="inputCircusTown">Town</label>
+        <input type="text" class="form-control" id="inputCircusTown">
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusPrestige">Prestige</label>
+            <input type="text" class="form-control" id="inputCircusPrestige">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusCoffers">Coffers</label>
+            <input type="text" class="form-control" id="inputCircusCoffers">
+          </div>
+        </div>
+      </div>
+      <div class="form-check">
+        <div class="row">
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusAcoustics">
+            <label class="form-check-label" for="inputCircusAcoustics">Acoustics</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusSafetynet">
+            <label class="form-check-label" for="inputCircusSafetynet">Safety Net</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusPaddedfloors">
+            <label class="form-check-label" for="inputCircusPaddedfloors">Padded Floors</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusBleachers">
+            <label class="form-check-label" for="inputCircusBleachers">Bleachers</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusAssigned">
+            <label class="form-check-label" for="inputCircusAssigned">Assigned Seats</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-check">
+        <div class="row">
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusUpholstered">
+            <label class="form-check-label" for="inputCircusUpholstered">Upholstered Seats</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusSpotlights">
+            <label class="form-check-label" for="inputCircusSpotlights">Spotlights</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusBigtent">
+            <label class="form-check-label" for="inputCircusBigtent">Big Tent</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusHugetent">
+            <label class="form-check-label" for="inputCircusHugetent">Huge Tent</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusMassivetent">
+            <label class="form-check-label" for="inputCircusMassivetent">Massive Tent</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-check">
+        <div class="row">
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusWatermark">
+            <label class="form-check-label" for="inputCircusWatermark">Watermarked Tickets</label>
+          </div>
+        </div>
+      </div>
+      <p></p>
+      <div class="form-group" id="npcs">
+      </div>
+      <button type="submit" class="btn btn-primary" onclick="saveCircus()">Save</button>
+      <button type="submit" class="btn btn-success" onclick="addNPC()">Add NPC</button>
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusAdtier">Ad Tier</label>
+            <input type="text" class="form-control" id="inputCircusAdTier">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusAdCost">Ad Cost</label>
+            <input type="text" class="form-control" id="inputCircusAdcost">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusAdAnt">Ad Ant</label>
+            <input type="text" class="form-control" id="inputCircusAdAnt">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusStartPrestige">Start Prestige</label>
+            <input type="text" class="form-control" id="inputCircusStartPrestige">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusStartEx">Start Excitement</label>
+            <input type="text" class="form-control" id="inputCircusStartEx">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusStartAnt">Start Ant</label>
+            <input type="text" class="form-control" id="inputCircusStartAnt">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusMaxAnt">Max Ant</label>
+            <input type="text" class="form-control" id="inputCircusMaxAnt">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusDay1Ant">Day 1 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay1Action">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay2Action">Day 2 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay2Action">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay3Action">Day 3 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay3Action">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay4Action">Day 4 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay4Action">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay5Action">Day 5 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay5Action">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay6Action">Day 6 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay6Action">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay7Action">Day 7 Action</label>
+            <input type="text" class="form-control" id="inputCircusDay7Action">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusDay1Ant">Day 1 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay1Ant">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay2Ant">Day 2 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay2Ant">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay3Ant">Day 3 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay3Ant">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay4Ant">Day 4 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay4Ant">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay5Ant">Day 5 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay5Ant">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay6Ant">Day 6 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay6Ant">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusDay7Ant">Day 7 Ant</label>
+            <input type="text" class="form-control" id="inputCircusDay7Ant">
+          </div>
+        </div>
+      </div>
+      <div class="form-check">
+        <div class="row">
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusBeer">
+            <label class="form-check-label" for="inputCircusBeer">Beer</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusConfections">
+            <label class="form-check-label" for="inputCircusConfections">Confections</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusBinoculars">
+            <label class="form-check-label" for="inputCircusBinoculars">Binoculars</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-check">
+        <div class="row">
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusMerchBasic">
+            <label class="form-check-label" for="inputCircusMerchBasic">Merch Basic</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusMerchQuality">
+            <label class="form-check-label" for="inputCircusMerchQuality">Merch Quality</label>
+          </div>
+          <div class="col-sm">
+            <input type="checkbox" class="form-check-input" id="inputCircusMerchExtra">
+            <label class="form-check-label" for="inputCircusMerchExtra">Merch Extra</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonPerf1Name">Non Perf 1 Name</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf1Name">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonPerf2Name">Non Perf 2 Name</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf2Name">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonPerf3Name">Non Perf 3 Name</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf3Name">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonPerf4Name">Non Perf 4 Name</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf4Name">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonPerf1Role">Non Perf 1 Role</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf1Role">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonPerf2Role">Non Perf 2 Role</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf2Role">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonPerf3Role">Non Perf 3 Role</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf3Role">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonPerf4Role">Non Perf 4 Role</label>
+            <input type="text" class="form-control" id="inputCircusNonPerf4Role">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputCircusRandomEvent">Random Event</label>
+        <input type="text" class="form-control" id="inputCircusRandomEvent">
+     </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Perf">Trick 1 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Perf">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Perf">Trick 2 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Perf">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Perf">Trick 3 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Perf">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Perf">Trick 4 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Perf">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Perf">Trick 5 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Perf">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Perf">Trick 6 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Perf">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Perf">Trick 7 Perf</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Perf">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Level">Trick 1 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Level">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Level">Trick 2 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Level">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Level">Trick 3 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Level">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Level">Trick 4 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Level">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Level">Trick 5 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Level">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Level">Trick 6 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Level">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Level">Trick 7 Level</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Level">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1DC">Trick 1 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick1DC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2DC">Trick 2 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick2DC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3DC">Trick 3 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick3DC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4DC">Trick 4 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick4DC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5DC">Trick 5 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick5DC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6DC">Trick 6 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick6DC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7DC">Trick 7 DC</label>
+            <input type="text" class="form-control" id="inputCircusTrick7DC">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Action1">Trick 1 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Action1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Action1">Trick 2 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Action1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Action1">Trick 3 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Action1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Action1">Trick 4 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Action1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Action1">Trick 5 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Action1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Action1">Trick 6 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Action1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Action1">Trick 7 Action1</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Action1">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Result1">Trick 1 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Result1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Result1">Trick 2 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Result1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Result1">Trick 3 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Result1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Result1">Trick 4 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Result1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Result1">Trick 5 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Result1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Result1">Trick 6 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Result1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Result1">Trick 7 Result1</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Result1">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1EXC1">Trick 1 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick1EXC1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2EXC1">Trick 2 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick2EXC1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3EXC1">Trick 3 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick3EXC1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4EXC1">Trick 4 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick4EXC1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5EXC1">Trick 5 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick5EXC1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6EXC1">Trick 6 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick6EXC1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7EXC1">Trick 7 EXC1</label>
+            <input type="text" class="form-control" id="inputCircusTrick7EXC1">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1ANT1">Trick 1 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick1ANT1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2ANT1">Trick 2 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick2ANT1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3ANT1">Trick 3 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick3ANT1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4ANT1">Trick 4 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick4ANT1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5ANT1">Trick 5 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick5ANT1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6ANT1">Trick 6 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick6ANT1">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7ANT1">Trick 7 ANT1</label>
+            <input type="text" class="form-control" id="inputCircusTrick7ANT1">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Action2">Trick 1 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Action2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Action2">Trick 2 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Action2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Action2">Trick 3 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Action2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Action2">Trick 4 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Action2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Action2">Trick 5 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Action2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Action2">Trick 6 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Action2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Action2">Trick 7 Action2</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Action2">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Result2">Trick 1 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Result2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Result2">Trick 2 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Result2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Result2">Trick 3 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Result2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Result2">Trick 4 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Result2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Result2">Trick 5 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Result2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Result2">Trick 6 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Result2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Result2">Trick 7 Result2</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Result2">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1EXC2">Trick 1 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick1EXC2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2EXC2">Trick 2 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick2EXC2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3EXC2">Trick 3 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick3EXC2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4EXC2">Trick 4 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick4EXC2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5EXC2">Trick 5 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick5EXC2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6EXC2">Trick 6 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick6EXC2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7EXC2">Trick 7 EXC2</label>
+            <input type="text" class="form-control" id="inputCircusTrick7EXC2">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1ANT2">Trick 1 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick1ANT2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2ANT2">Trick 2 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick2ANT2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3ANT2">Trick 3 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick3ANT2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4ANT2">Trick 4 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick4ANT2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5ANT2">Trick 5 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick5ANT2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6ANT2">Trick 6 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick6ANT2">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7ANT2">Trick 7 ANT2</label>
+            <input type="text" class="form-control" id="inputCircusTrick7ANT2">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Action3">Trick 1 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Action3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Action3">Trick 2 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Action3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Action3">Trick 3 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Action3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Action3">Trick 4 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Action3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Action3">Trick 5 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Action3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Action3">Trick 6 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Action3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Action3">Trick 7 Action3</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Action3">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1Result3">Trick 1 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick1Result3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2Result3">Trick 2 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick2Result3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3Result3">Trick 3 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick3Result3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4Result3">Trick 4 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick4Result3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5Result3">Trick 5 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick5Result3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6Result3">Trick 6 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick6Result3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7Result3">Trick 7 Result3</label>
+            <input type="text" class="form-control" id="inputCircusTrick7Result3">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1EXC3">Trick 1 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick1EXC3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2EXC3">Trick 2 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick2EXC3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3EXC3">Trick 3 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick3EXC3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4EXC3">Trick 4 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick4EXC3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5EXC3">Trick 5 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick5EXC3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6EXC3">Trick 6 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick6EXC3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7EXC3">Trick 7 EXC3</label>
+            <input type="text" class="form-control" id="inputCircusTrick7EXC3">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusNonTrick1ANT3">Trick 1 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick1ANT3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick2ANT3">Trick 2 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick2ANT3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick3ANT3">Trick 3 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick3ANT3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick4ANT3">Trick 4 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick4ANT3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick5ANT3">Trick 5 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick5ANT3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick6ANT3">Trick 6 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick6ANT3">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusNonTrick7ANT3">Trick 7 ANT3</label>
+            <input type="text" class="form-control" id="inputCircusTrick7ANT3">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusFinalEXC">Final EXC</label>
+            <input type="text" class="form-control" id="inputCircusFinalEXC">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusFinalAnt">Final ANT</label>
+            <input type="text" class="form-control" id="inputCircusFinalAnt">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusFinalPrestige">Final Prestige</label>
+            <input type="text" class="form-control" id="inputCircusFinalPrestige">
+          </div>
+          <div class="col-sm">
+            <label for="inputCircusPayout">Payout</label>
+            <input type="text" class="form-control" id="inputCircusPayout">
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" onclick="saveShow()">Save</button>
+      <p></p>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm">
+            <label for="inputCircusGetShow">Show #</label>
+            <input type="text" class="form-control" id="inputCircusGetShow">
+          </div>
+          <div class="col-sm">
+            <button type="submit" class="btn btn-warning" onclick="getShow()">Get</button>
+            <button type="submit" class="btn btn-info" onclick="updateShow()">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+      <p></p>
+      <div class="form-group">
+        <label for="inputServer">Grognard Server Address</label>
+        <input type="text" class="form-control" id="inputServer" value="http://asdasdasdsad">
+      </div>
+      <div class="form-group">
+        <label for="InputDB">Fantasy Grounds Campaign Database</label>
+        <input type="text" class="form-control" id="inputDB" value="c:\">
+      </div>
+      <div class="form-group">
+        <label for="InputLog">Stats Extension Log Directory</label>
+        <input type="text" class="form-control" id="inputLog" value="c:\">
+      </div>
+      <button type="submit" class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+</div>
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</body>
+
+</html>
