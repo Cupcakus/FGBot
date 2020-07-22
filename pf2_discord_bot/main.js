@@ -24,7 +24,7 @@ var gPlayerDB;
 
 app.use(body_parser.json());
 
-bot.login([SECRET_KEY]);
+bot.login("Njk1NzU2NDI4NjAxODUyMDE5.XxcubA.U_iZC4yxj42XATFrTtJwQ6e6-4g");
 
 bot.on('ready', function () {
     console.log("Logged in as " + bot.user.tag);
@@ -248,9 +248,9 @@ function dumpShow(show, channel) {
 
 bot.on('message', message => {
     //Ignore our own messages
-    if (message.author.tag === "Grognard#0195") return;
+    if (message.author.tag === bot.user.tag) return;
     checkAuth(message.author.tag, function (level) {
-        if (level === 0) {
+        if (level === 0 && (message.content.startsWith('!') || message.channel.type == 'dm')) {
             message.channel.send("I'm sorry my friend... No GM has authorized me to help you. :frowning2:");
             return;
         }
