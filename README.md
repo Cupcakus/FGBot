@@ -19,6 +19,7 @@ There are three code-bases for this tool.
 - Create the database `use grognarddb`
 - Create the *users* collection `db.test_account_users.insert({_id:1})`
 - Create the *counter* collection `db.test_account_counter.insert({_id:"showID", seqValue:0})`
+- Create the *currentsession* collection `db.test_account_currentsession.insert({_id:1, current_session:"1", start_time: ISODate("2020-07-20T00:21:53.607Z")})`
 - Exit the mongo command line `exit`
 
 ## PF2 Discord Bot
