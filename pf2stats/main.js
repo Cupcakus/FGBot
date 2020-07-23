@@ -1,10 +1,17 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, ipcMain} = require('electron');
 var parser = require('xml2js');
+var os = require('os');
 const fs = require('fs');
 const http = require('http');
 const axios = require('axios')
 const storage = require('electron-json-storage');
+
+const dotenv = require('dotenv');
+const env = dotenv.config()
+if (env.error) {
+    throw result.error
+}
 
 var gSettings;
 
@@ -122,8 +129,12 @@ app.on('ready', function() {
       if (gSettings.sessionDate == undefined)
       {
           gSettings.server = "http://localhost:3000";
-          gSettings.DB = "C:\\Users\\Chris\\AppData\\Roaming\\Fantasy Grounds\\campaigns\\Age of Ashes\\db.xml";
-          gSettings.Log = "C:\\projects\\logs"
+          if (os.platform() == 'win32') {
+              gSettings.DB = process.env.FGBOT_CAMPAIGN_DIR + "\\db.xml";
+          } else {
+              gSettings.DB = process.env.FGBOT_CAMPAIGN_DIR + "/db.xml";
+          }
+          gSettings.Log = process.env.FGBOT_LOG_DIR
           gSettings.session = 0;
           gSettings.sessionDate = new Date();
       }
@@ -207,7 +218,11 @@ function checkLogs()
         //listing all files using forEach
         files.forEach(function (file) {
             // Do whatever you want to do with the file
-            var data = fs.readFileSync(gSettings.Log + "\\" + file);
+            if (os.platform() == 'win32') {
+                var data = fs.readFileSync(gSettings.Log + "\\" + file);
+            } else {
+                var data = fs.readFileSync(gSettings.Log + "/" + file);
+            }
             parser.parseString(data, function (err, result) {
                 if (result.root.event[0]._ == "KILLED") {
                     var damagestr = result.root.damage[0]._;
@@ -218,7 +233,11 @@ function checkLogs()
                     n = damagestr.indexOf("[");
                     damagestr = damagestr.substr(0, n - 1);
                     http.get(gSettings.server + "/mdk/" + result.root.source[0]._ + "/" + result.root.target[0]._ + "/" + result.root.damage_total[0]._ + "/" + damagestr + "/" + critical, function (err) {
-                        fs.unlinkSync("c:\\projects\\logs\\" + file)
+                        if (os.platform() == 'win32') {
+                            fs.unlinkSync(process.env.FGBOT_LOG_DIR + "\\" + file)
+                        } else {
+                            fs.unlinkSync(process.env.FGBOT_LOG_DIR + "/" + file)
+                        }
                     });
                 } 
                 else if(result.root.event[0]._ == "dierollpf2")
@@ -237,7 +256,11 @@ function checkLogs()
                         mainWindow.webContents.send('NewSession', result.root.session[0]._);
                     }
                     http.get(gSettings.server + "/die/" + result.root.session[0]._ + "/" + result.root.sender[0]._ + "/" + result.root.user[0]._ + "/" + result.root.dice[0]._, function (err) {
-                        fs.unlinkSync(gSettings.Log + "\\" + file);
+                        if (os.platform() == 'win32') {
+                            fs.unlinkSync(gSettings.Log + "\\" + file);
+                        } else {
+                            fs.unlinkSync(gSettings.Log + "/" + file);
+                        }
                     });
                 }
             });

@@ -10,6 +10,11 @@
   <script src="./contents/jquery/jquery.js" onload="window.$ = window.jQuery = module.exports"></script>
   <script src="./contents/bootstrap/js/bootstrap.min.js"></script>
   <script>
+    const dotenv = require('dotenv');
+    const env = dotenv.config()
+    if (env.error) {
+      throw result.error
+    }
     const storage = require('electron-json-storage');
     var gSettings;
     storage.get('settings', function (error, data) {
@@ -18,8 +23,12 @@
       gSettings = data;
       if (gSettings.sessionDate == undefined) {
         gSettings.server = "http://localhost:3000";
-        gSettings.DB = "C:\\Users\\Chris\\AppData\\Roaming\\Fantasy Grounds\\campaigns\\Age of Ashes\\db.xml";
-        gSettings.Log = "C:\\projects\\logs"
+        if (os.platform() == 'win32') {
+          gSettings.DB = process.env.FGBOT_CAMPAIGN_DIR + "\\db.xml";
+        } else {
+          gSettings.DB = process.env.FGBOT_CAMPAIGN_DIR + "/db.xml";
+        }
+        gSettings.Log = process.env.FGBOT_LOG_DIR
         gSettings.session = 0;
         gSettings.sessionDate = new Date();
       }

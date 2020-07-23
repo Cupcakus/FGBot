@@ -13,6 +13,13 @@ There are three code-bases for this tool.
 - **pf2statsext:** This is the FG/FGU Extension that collects the die roll and kill stats and exports them to log files on disk.
 - **pf2stats:** This is the windows application, powered by [Electron](https://www.electronjs.org/) that parses the logs files and sends them off to the bot.
 
+## Local environment setup
+
+- Inside each directory that has a file called `example-dot-env.txt`
+  - Copy `example-dot-env.txt` to `.env`
+  - Edit the values in that file as needed
+  - This file is included in the `.gitignore` file and will not be commited into the git repo
+
 ## Database Setup
 - Make sure mongo is running `sudo service mongodb start`
 - Run the mongo command line `mongo`

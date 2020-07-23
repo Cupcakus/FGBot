@@ -1,0 +1,5 @@
+# copy to .env and edit as required
+
+FGBOT_DB_NAME=grognarddb
+#FGBOT_DISCORD_BOT_TOKEN=uncomment_and_set
+

@@ -1,0 +1,9 @@
+# OS Files
+.DS_Store
+
+# Editor Files
+
+# Project Files
+.env
+node_modules/
+data/mongodb/*

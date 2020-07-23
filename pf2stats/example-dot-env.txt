@@ -1,0 +1,4 @@
+# copy to .env and edit as required
+
+FGBOT_LOG_DIR="C:\\projects\\logs"
+FGBOT_CAMPAIGN_DIR="C:\\Users\\Chris\\AppData\\Roaming\\Fantasy Grounds\\campaigns\\Age of Ashes"

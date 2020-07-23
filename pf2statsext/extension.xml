@@ -28,7 +28,7 @@ Copyright © 2015 Smiteworks USA, LLC
 			<minrelease>12</minrelease>
 		</ruleset>
 	</properties>
-	<announcement text="--Session Stats Recorder v0.6.0 Beta\nFor Fantasy Grounds Unity\nPFRPG2 Release 12+\nRequires Companion App\n--By Cupcakus" font="emotefont"/>
+	<announcement text="--Session Stats Recorder v0.6.5 Beta\nFor Fantasy Grounds Unity\nPFRPG2 Release 12+\nRequires Companion App\n--By Cupcakus (w/ contributions)" font="emotefont"/>
 	<base>
 	<script name="EasyCT" file="scripts/easy_ct.lua" />
 	<windowclass name="chat" merge="join">

@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
     "electron-json-storage": "^4.1.8"
   },
   "devDependencies": {

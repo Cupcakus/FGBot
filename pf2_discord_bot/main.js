@@ -1,3 +1,8 @@
+const dotenv = require('dotenv');
+const env = dotenv.config()
+if (env.error) {
+    throw result.error
+}
 const Discord = require('discord.js');
 const express = require('express')
 const mongo = require('mongodb')
@@ -12,8 +17,8 @@ var currentSession = -1;
 var client = new mongo.MongoClient("mongodb://localhost:27017", { useUnifiedTopology: true });
 const bot = new Discord.Client();
 
-const gVersion="v0.6.4 (Beta)"
-const gUpdated="June 2nd, 2020"
+const gVersion="v0.6.5 (Beta)"
+const gUpdated="July 23rd, 2020"
 
 console.log("************************************************");
 console.log("*     GROGNARD FANTASY GROUNDS/DISCORD BOT     *");
@@ -26,7 +31,7 @@ var gPlayerDB;
 
 app.use(body_parser.json());
 
-bot.login([SECRET_KEY]);
+bot.login(process.env.FGBOT_DISCORD_BOT_TOKEN);
 
 bot.on('ready', function () {
     console.log("Logged in as " + bot.user.tag);
@@ -36,8 +41,9 @@ bot.on('ready', function () {
 client.connect(function (err) {
     if (err) throw err;
     console.log("DB Connected!");
-    db = client.db("grognarddb");
+    db = client.db(process.env.FGBOT_DB_NAME);
     const collection = db.collection(account + "_currentsession");
+    console.log(collection);
     collection.find({}).toArray(function (err, doc) {
         currentSession = doc[0].current_session;
         currentSessionTime = doc[0].start_time;

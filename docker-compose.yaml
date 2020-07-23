@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mongo:
+    build:
+      context: mongodb
+    image: 'fgbot-mongo:latest'
+    restart: unless-stopped
+    container_name: 'fg-db'
+    environment:
+      - MONGO_INITDB_DATABASE=${FGBOT_DB_NAME:-grognarddb}
+      - MONGO_INITDB_ROOT_USERNAME=${FGBOT_DB_USERNAME:-fgbot}
+      - MONGO_INITDB_ROOT_PASSWORD=${FGBOT_DB_PASSWORD:?You must set the environment variable FGBOT_DB_PASSWORD with your DB password!}
+    volumes:
+      - ./data/mongodb:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+  bot:
+    build:
+      context: pf2_discord_bot
+    image: 'fgbot-bot:latest'
+    restart: unless-stopped
+    container_name: 'fg-bot'
+    environment:
+      - FGBOT_DB_NAME=${FGBOT_DB_NAME:-grognarddb}
+      - FGBOT_DISCORD_BOT_TOKEN=${FGBOT_DISCORD_BOT_TOKEN:?You must set the environment variable FGBOT_DB_PASSWORD with your DB password!}
