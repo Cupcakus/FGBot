@@ -18,8 +18,9 @@ There are three code-bases for this tool.
 - Inside each directory that has a file called `example-dot-env.txt`
   - Copy `example-dot-env.txt` to `.env`
   - Edit the values in that file as needed
-  - This file is included in the `.gitignore` file and will not be commited into the git repo
-
+  - This file is included in the `.gitignore` file and will not be committed into the git repo
+- It is recommended that after you checkout the code base you run this to help maintain line endings:
+  - `git config --global core.autocrlf input`
 ## Database Setup
 - Make sure mongo is running `sudo service mongodb start`
 - Run the mongo command line `mongo`

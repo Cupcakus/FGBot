@@ -10,7 +10,7 @@ const storage = require('electron-json-storage');
 const dotenv = require('dotenv');
 const env = dotenv.config()
 if (env.error) {
-    throw result.error
+    throw env.error
 }
 
 var gSettings;

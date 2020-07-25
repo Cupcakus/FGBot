@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const env = dotenv.config()
 if (env.error) {
-    throw result.error
+    throw env.error
 }
 const Discord = require('discord.js');
 const express = require('express')

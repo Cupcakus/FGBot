@@ -11,7 +11,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${FGBOT_DB_USERNAME:-fgbot}
       - MONGO_INITDB_ROOT_PASSWORD=${FGBOT_DB_PASSWORD:?You must set the environment variable FGBOT_DB_PASSWORD with your DB password!}
     volumes:
-      - ./data/mongodb:/data/db
+      - /data/db
     ports:
       - '27017-27019:27017-27019'
   bot:
