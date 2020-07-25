@@ -1,0 +1,1 @@
+bash .\prep-env.sh

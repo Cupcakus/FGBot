@@ -11,17 +11,24 @@ You will need to install [Node.JS](https://nodejs.org/en/), NPM, and [MongoDB](h
 There are three code-bases for this tool.
 - **pf2_discord_bot:** This is the Discord Bot (Grognard), powered by Node.JS
 - **pf2statsext:** This is the FG/FGU Extension that collects the die roll and kill stats and exports them to log files on disk.
-- **pf2stats:** This is the windows application, powered by [Electron](https://www.electronjs.org/) that parses the logs files and sends them off to the bot.
+- **pf2stats:** This is the GUI application, powered by [Electron](https://www.electronjs.org/) that parses the logs files and sends them off to the bot.
 
 ## Local environment setup
 
 - Inside each directory that has a file called `example-dot-env.txt`
   - Copy `example-dot-env.txt` to `.env`
+    - or simply run `./bin/prep-env.sh` or `.\bin\prep-en.ps1`
   - Edit the values in that file as needed
   - This file is included in the `.gitignore` file and will not be committed into the git repo
 - It is recommended that after you checkout the code base you run this to help maintain line endings:
   - `git config --global core.autocrlf input`
+- For the FG extension, define the environment variable FGBOT_EXT_LOG_DIR to point to your log directory with a terminating slash.
+  - e.g. FGBOT_EXT_LOG_DIR="C:\\projects\\logs\\"
+
 ## Database Setup
+
+### Manual method
+
 - Make sure mongo is running `sudo service mongodb start`
 - Run the mongo command line `mongo`
 - Create the database `use grognarddb`
@@ -30,13 +37,20 @@ There are three code-bases for this tool.
 - Create the *currentsession* collection `db.test_account_currentsession.insert({_id:1, current_session:"1", start_time: ISODate("2020-07-20T00:21:53.607Z")})`
 - Exit the mongo command line `exit`
 
+### Docker Compose method
+
+- Run: `docker-compose up -d`
+  - which will start the database and Discord bot, assuming that the `.env` files are configured properly.
+
 ## PF2 Discord Bot
+
 - You will need to create and register your bot with [Discord](https://discord.com/developers).
 - Open **pf2_discord_bot/main.js** and find `bot.login([SECRET_KEY]);` replace *SECRET_KEY* with the token for your bot.  Add the bot to your server, and make sure you give it permissions to join and read/write to all your text channels.
 - Install prequisites `npm install`
 - Run the bot `npm start` you should see the bot login to your Discord.  You are now good to go.
 
 ## Windows Application
+
 - By default the application will look for logs written to "*C:\Projects\Logs*".  If you want to read and write logs to a different directory you will need to edit this in both this application and the extension.  It's probably easiest to just create the directory.  In WSL this will be `mkdir /mnt/c/projects/logs`
 - Install prerequisites `npm install`
 - Run the application `npm start` **NOTE:** Make sure you run this from a Windows command prompt... NOT WSL
@@ -49,12 +63,14 @@ There are three code-bases for this tool.
 - **NOTE:** There is a settings tab in the APP... this does nothing at the moment, even if it looks like it should.
   
 ## FG/FGU Extension
+
 - Edit **pf2statsext/build.sh** and input the path to your Fantasy Grounds installation.
 - Run the script... `./build.sh` this should install the extension in your FG/FGU
 - With both the BOT and the APP running, open Fantasy Grounds and load a PF2E campaign with the extension enabled.
 - Roll a die in the chat window, you should see both the BOT and APP report a new session has started.  This means everything is working!
 
 ## How To Use
+
 Each time you load a campaign in Fantasy Grounds and roll a die a new session will be created.  It's important to not close and open FG during a session because of this.  All the stats for the current session will reset each time you do.
 - In Discord, verify the bot is working by typing `!version` the bot should respond.  If it doesn't want to talk to you but still responds, it doesn't think you are authorized.  Make sure you set up your Disord ID correctly as the Gamemaster in the APP
 - If you want a channel to recieve toasts each time one of your player's kills something you need to tell Grognard to talk there.  Type `!register` to register a channel with him.
@@ -64,5 +80,6 @@ Each time you load a campaign in Fantasy Grounds and roll a die a new session wi
 - Players can ask the bot `!stats` via DM to get their basic stats... (Enemies killed, attendance %, ...)
 
 ## Known Issues
+
 - Sometimes FG/FGU will write a log file and the APP will try to parse it before it's done.  This will pop up an error on the APP about a resource being locked, clicking OK on the error will bypass the issue.
 - I need to santize the inputs sent over the network still... If a player has an illegal character in his or her name, or weapon, it will gum up the works and the stats won't register correctly.

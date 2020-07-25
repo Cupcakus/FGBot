@@ -10,11 +10,15 @@ const body_parser = require('body-parser');
 const circus = require('./circus');
 const help = require('./help');
 const app = express()
-const port = 3000
+const dbhost = process.env.FGBOT_DB_HOST
+const dbport = process.env.FGBOT_DB_PORT
+const dbauth = process.env.FGBOT_DB_AUTH_STRING
+const ip = process.env.FGBOT_BOT_LISTEN_IP
+const port = process.env.FGBOT_BOT_LISTEN_PORT
 const account = "test_account"
 var currentSession = -1;
 
-var client = new mongo.MongoClient("mongodb://localhost:27017", { useUnifiedTopology: true });
+var client = new mongo.MongoClient("mongodb://" + process.env.FGBOT_DB_AUTH_STRING + process.env.FGBOT_DB_HOST + ":" + process.env.FGBOT_DB_PORT, { useUnifiedTopology: true });
 const bot = new Discord.Client();
 
 const gVersion="v0.6.5 (Beta)"
@@ -35,7 +39,7 @@ bot.login(process.env.FGBOT_DISCORD_BOT_TOKEN);
 
 bot.on('ready', function () {
     console.log("Logged in as " + bot.user.tag);
-    app.listen(port, () => console.log(`App listening at http://localhost:${port}`))
+    app.listen(port, ip, () => console.log(`App listening at http://${ip}:${port}`))
 });
 
 client.connect(function (err) {

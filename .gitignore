@@ -6,4 +6,3 @@
 # Project Files
 .env
 node_modules/
-data/mongodb/*

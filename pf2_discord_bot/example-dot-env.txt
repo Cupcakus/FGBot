@@ -1,5 +1,12 @@
 # copy to .env and edit as required
 
 FGBOT_DB_NAME=grognarddb
+FGBOT_DB_HOST=127.0.0.1
+FGBOT_DB_PORT=27017
+# The following argument can be blank or contain 'username:password@'
+FGBOT_DB_AUTH_STRING=
+
 #FGBOT_DISCORD_BOT_TOKEN=uncomment_and_set
 
+FGBOT_BOT_LISTEN_PORT=3000
+FGBOT_BOT_LISTEN_IP=127.0.0.1

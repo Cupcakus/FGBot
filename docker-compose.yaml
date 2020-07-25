@@ -6,20 +6,31 @@ services:
     image: 'fgbot-mongo:latest'
     restart: unless-stopped
     container_name: 'fg-db'
+    volumes:
+      - fgbot-db-volume:/data/db
+    ports:
+      - '27017-27019:27017-27019'
     environment:
       - MONGO_INITDB_DATABASE=${FGBOT_DB_NAME:-grognarddb}
       - MONGO_INITDB_ROOT_USERNAME=${FGBOT_DB_USERNAME:-fgbot}
       - MONGO_INITDB_ROOT_PASSWORD=${FGBOT_DB_PASSWORD:?You must set the environment variable FGBOT_DB_PASSWORD with your DB password!}
-    volumes:
-      - /data/db
-    ports:
-      - '27017-27019:27017-27019'
   bot:
     build:
       context: pf2_discord_bot
     image: 'fgbot-bot:latest'
+    depends_on:
+      - mongo
     restart: unless-stopped
     container_name: 'fg-bot'
+    ports:
+      - '3000:3000'
     environment:
       - FGBOT_DB_NAME=${FGBOT_DB_NAME:-grognarddb}
-      - FGBOT_DISCORD_BOT_TOKEN=${FGBOT_DISCORD_BOT_TOKEN:?You must set the environment variable FGBOT_DB_PASSWORD with your DB password!}
+      - FGBOT_DB_HOST=${FGBOT_DB_HOST:-mongo}
+      - FGBOT_DB_PORT=${FGBOT_DB_PORT:-27017}
+      - FGBOT_DB_AUTH_STRING=${FGBOT_DB_AUTH_STRING-}
+      - FGBOT_DISCORD_BOT_TOKEN=${FGBOT_DISCORD_BOT_TOKEN:?You must set the environment variable FGBOT_DISCORD_BOT_TOKEN with your Discord bot token!}
+      - FGBOT_BOT_LISTEN_PORT=${FGBOT_BOT_PORT:-3000}
+      - FGBOT_BOT_LISTEN_IP=${FGBOT_BOT_LISTEN_IP:-0.0.0.0}
+volumes:
+  fgbot-db-volume:

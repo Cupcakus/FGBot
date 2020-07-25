@@ -121,14 +121,14 @@ function createWindow () {
 app.on('ready', function() {
     createWindow();
     setInterval(checkLogs, 1000);
-
+    console.log("The state for this app is stored here:" + app.getPath('userData'))
     storage.get('settings', function (error, data) {
       if (error) throw error;
 
       gSettings = data;
       if (gSettings.sessionDate == undefined)
       {
-          gSettings.server = "http://localhost:3000";
+          gSettings.server = "http://" + process.env.FGBOT_BOT_HOST + ":" + process.env.FGBOT_BOT_PORT;
           if (os.platform() == 'win32') {
               gSettings.DB = process.env.FGBOT_CAMPAIGN_DIR + "\\db.xml";
           } else {

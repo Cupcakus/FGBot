@@ -2,3 +2,6 @@
 
 FGBOT_LOG_DIR="C:\\projects\\logs"
 FGBOT_CAMPAIGN_DIR="C:\\Users\\Chris\\AppData\\Roaming\\Fantasy Grounds\\campaigns\\Age of Ashes"
+
+FGBOT_BOT_PORT=3000
+FGBOT_BOT_HOST=127.0.0.1

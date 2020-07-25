@@ -5,7 +5,7 @@ FROM mongo:4.2
 RUN mkdir -p /home/mongodb && \
       chown -R mongodb:mongodb /home/mongodb
 
-COPY setup.js /docker-entrypoint-initdb.d/
+COPY seed/setup.js /docker-entrypoint-initdb.d/
 COPY docker-healthcheck /usr/local/bin/
 
 HEALTHCHECK CMD ["docker-healthcheck"]
