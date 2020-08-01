@@ -58,3 +58,5 @@ Each time you load a campaign in Fantasy Grounds and roll a die a new session wi
 ## Known Issues
 - Sometimes FG/FGU will write a log file and the APP will try to parse it before it's done.  This will pop up an error on the APP about a resource being locked, clicking OK on the error will bypass the issue.
 - I need to santize the inputs sent over the network still... If a player has an illegal character in his or her name, or weapon, it will gum up the works and the stats won't register correctly.
+- Drag and drop damage and persistent damage (PERS:) does not award kills correctly.
+- Animal companions do get credit for a kill, but the owner of that animal doesn't.  This leads to characters that rely on animals for combat to have poor stats.
