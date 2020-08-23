@@ -1,3 +1,27 @@
+/* main.js -- Discord bot for Fantasy Grounds
+ *
+ * Copyright (c) 2020 Cupcakus
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 const Discord = require('discord.js');
 const express = require('express')
 const mongo = require('mongodb')
@@ -26,7 +50,7 @@ var gPlayerDB;
 
 app.use(body_parser.json());
 
-bot.login([SECRET_KEY]);
+bot.login("Njk1NzU2NDI4NjAxODUyMDE5.XxiSDg.SKnriu5118Jrm0e53WblYQSbjNs");
 
 bot.on('ready', function () {
     console.log("Logged in as " + bot.user.tag);
