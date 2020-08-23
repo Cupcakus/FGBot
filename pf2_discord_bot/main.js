@@ -50,7 +50,7 @@ var gPlayerDB;
 
 app.use(body_parser.json());
 
-bot.login("Njk1NzU2NDI4NjAxODUyMDE5.XxiSDg.SKnriu5118Jrm0e53WblYQSbjNs");
+bot.login("SECRET-KEY");
 
 bot.on('ready', function () {
     console.log("Logged in as " + bot.user.tag);
