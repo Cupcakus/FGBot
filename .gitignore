@@ -1,4 +1,5 @@
-pf2stats/.vscode*
-pf2stats/node_modules*
-pf2_discord_bot/.vscode*
-pf2_discord_bot/node_modules*
+pf2stats/.vscode/*
+pf2stats/node_modules/*
+pf2_discord_bot/.vscode/*
+pf2_discord_bot/node_modules/*
+pf2_discord_bot/keys/discord.key

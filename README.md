@@ -15,16 +15,12 @@ There are three code-bases for this tool.
 
 ## Database Setup
 - Make sure mongo is running `sudo service mongodb start`
-- Run the mongo command line `mongo`
-- Create the database `use grognarddb`
-- Create the *users* collection `db.test_account_users.insert({_id:1})`
-- Create the *counter* collection `db.test_account_counter.insert({_id:"showID", seqValue:0})`
-- Create the *currentsession* collection `db.test_account_currentsession.insert({_id:1, current_session:"1", start_time: ISODate("2020-07-20T00:21:53.607Z")})`
-- Exit the mongo command line `exit`
+- The database is now configured automatically, no other steps are needed...
 
 ## PF2 Discord Bot
 - You will need to create and register your bot with [Discord](https://discord.com/developers).
-- Open **pf2_discord_bot/main.js** and find `bot.login([SECRET_KEY]);` replace *SECRET_KEY* with the token for your bot.  Add the bot to your server, and make sure you give it permissions to join and read/write to all your text channels.
+- Create a new file in the **keys** directory called `pf2_discord_bot/keys/discord.key`.  Add your discord bot token to that file as plain text.
+- Add the bot to your server, make sure you give it permissions to join and read/write to all your text channels.
 - Install prequisites `npm install`
 - Run the bot `npm start` you should see the bot login to your Discord.  You are now good to go.
 

@@ -28,6 +28,7 @@ const mongo = require('mongodb')
 const body_parser = require('body-parser');
 const circus = require('./circus');
 const help = require('./help');
+const fs = require('fs');
 const app = express()
 const port = 3000
 const account = "test_account"
@@ -36,12 +37,12 @@ var currentSession = -1;
 var client = new mongo.MongoClient("mongodb://localhost:27017", { useUnifiedTopology: true });
 const bot = new Discord.Client();
 
-const gVersion="v0.6.4 (Beta)"
-const gUpdated="June 2nd, 2020"
+const gVersion="v0.6.5 (Beta)"
+const gUpdated="August 26th, 2020"
 
 console.log("************************************************");
 console.log("*     GROGNARD FANTASY GROUNDS/DISCORD BOT     *");
-console.log("*            VERSION v0.6.4 (Beta)             *");
+console.log("*            VERSION v0.6.5 (Beta)             *");
 console.log("************************************************");
 
 var db;
@@ -50,7 +51,7 @@ var gPlayerDB;
 
 app.use(body_parser.json());
 
-bot.login("SECRET-KEY");
+bot.login(fs.readFileSync('./keys/discord.key', {encoding: 'UTF-8'}));
 
 bot.on('ready', function () {
     console.log("Logged in as " + bot.user.tag);
@@ -61,14 +62,16 @@ client.connect(function (err) {
     if (err) throw err;
     console.log("DB Connected!");
     db = client.db("grognarddb");
-    const collection = db.collection(account + "_currentsession");
-    collection.find({}).toArray(function (err, doc) {
-        currentSession = doc[0].current_session;
-        currentSessionTime = doc[0].start_time;
-        console.log("Current Session: " + currentSession)
-
-        //Init Circus
-        circus.registerRoutes(app, db, account);
+    verifyDatabase(() => {
+        const collection = db.collection(account + "_currentsession");
+        collection.find({}).toArray(function (err, doc) {
+            currentSession = doc[0].current_session;
+            currentSessionTime = doc[0].start_time;
+            console.log("Current Session: " + currentSession)
+    
+            //Init Circus
+            circus.registerRoutes(app, db, account);
+        })    
     })
 });
 
@@ -156,6 +159,27 @@ function getWholePercent(percentFor,percentOf)
 {
     if (percentOf == 0) return 0;
     return Math.floor(percentFor/percentOf*100);
+}
+
+/* This assumes that if the users collection is missing, all of it is missing */
+/* Bad things may happen if the db is only partially missing... */
+function verifyDatabase(callback) {
+    var users = db.collection(account + "_users");
+    var counter = db.collection(account + "_counter");
+    var currentsession = db.collection(account + "_currentsession");
+    users.findOne({_id: 1}, (err, data) => {
+        if (!data) {
+            users.insertOne({_id: 1}, (err) => {
+                counter.insertOne({_id: "showID", seqValue: 0}, (err) => {
+                    currentsession.insertOne({_id:1, current_session:"1", start_time: new Date()}, (err) => {
+                        callback();
+                    })
+                });
+            });
+        } else {
+            callback();
+        }
+    });
 }
 
 bot.on('message', message => {
