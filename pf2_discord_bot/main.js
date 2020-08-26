@@ -217,7 +217,7 @@ bot.on('message', message => {
                 ]
             };
 
-            message.channel.send({ embed });
+            message.channel.send({ embed: embed });
         }
 
         if (level == 2 && message.content.startsWith("!") && message.channel.type != 'dm') {

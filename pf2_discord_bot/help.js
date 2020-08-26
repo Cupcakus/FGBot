@@ -27,7 +27,7 @@ module.exports = {
         if (message.content.startsWith('!help')) {
             if (message.content.indexOf(" ") <= 0) {
                 const embed = {
-                    "content": "Of course" + getName(message.author.tag) + "! What would you like help with?",
+                    "content": "Of course. What would you like help with?",
                     "embed": {
                         "color": 3809471,
                         "timestamp": new Date(),
