@@ -119,7 +119,6 @@ module.exports = {
                     field.value = "**[" + doc.npcs[i].name + "](" + doc.npcs[i].img + ")**\n**TRAITS:** " + doc.npcs[i].traits + "\n**CHECKS:** " + doc.npcs[i].checks + "\n**DC:** " + doc.npcs[i].dc;
                     embed.embed.fields.push(field);
                 }
-                //console.log(embed.embed);
                 message.channel.send(embed);
             });
         }
